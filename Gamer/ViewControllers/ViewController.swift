@@ -18,15 +18,12 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        game = FootballBlackMini(population: 100)
-        game?.delegate = self
+        game = FootballBlackMini(population: 10, delegate: self)
     }
     
    @IBAction func onButton(sender: NSView){
         if let game = game {
-            adbManager.startActivity(withName: game.activityName)
-            //takeScreenshot()
-            //adbManager.flick(dx: 0.2, dy: 0.5, duration: 0.4)
+            game.start(generation: 0)
         }
     }
 }
@@ -45,9 +42,14 @@ extension ViewController: GameDelegate{
             if let image = image {
                 completion(image)
             }
-            
         }
     }
+    
+    func allPlayersFinished() {
+        //TODO: start the next generation here
+        //game?.start(generation: )
+    }
+       
     
 }
 

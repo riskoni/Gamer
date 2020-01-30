@@ -11,52 +11,96 @@ import Cocoa
 
 protocol Game {
     var activityName: String {get}
-    var delegate: GameDelegate? {get set}
-    init(population: Int)
+    init(population: Int, delegate: GameDelegate)
+    func start(generation: Int)
     
 }
 
 protocol GameDelegate {
     func requestScreenshot(completion: @escaping (NSImage?)->Void)
     func sendFlickToDevice(x: Float, y: Float, x2: Float, y2: Float, duration: Float)
+    func allPlayersFinished()
 }
+
+
 
 class FootballBlackMini: Game {
     let activityName = "TODO"
+    fileprivate var playerIndex = 0
+    fileprivate var players = [Player]()
+    fileprivate var delegate: GameDelegate!
     
-    fileprivate let black = NSColor(calibratedRed: 0, green: 0, blue: 0, alpha: 1)
-    fileprivate let white = NSColor(calibratedRed: 1, green: 1, blue: 1, alpha: 1)
-    var currentGeneration = 0
-    var currentNeuralNet = 0
-    var neuralNets = [NeuralNet]()
-    var delegate: GameDelegate? = nil
+    var currentPlayer: Player? {
+        if playerIndex < players.count {
+            return players[playerIndex]
+        }
+        return nil
+    }
     
-    
-    required init(population: Int){
+    required init(population: Int, delegate: GameDelegate){
+        self.delegate = delegate
+        
         //Input is just the position of the obstacle x, y
         //Output is touchStart x,y, touchEnd x,y and flick speed
         let structure = try! NeuralNet.Structure(nodes: [2,10,5], hiddenActivation: .rectifiedLinear, outputActivation: .softmax)
         
         for _ in 0..<population{
             let nn = try! NeuralNet(structure: structure, randomizeLastLayer: true)
-            neuralNets.append(nn)
+            players.append(Player(neuralNet: nn))
         }
     }
     
-    func process(screenshot: NSImage) {
+    func start(generation: Int){
+        print("**Starting generation \(generation)")
+        for player in players{
+            player.state = .idle
+        }
+        
+        requestScreenshot()
+    }
+    
+    
+    fileprivate func requestScreenshot(){
+        delegate?.requestScreenshot(completion: { (image) in
+            if let image = image{
+                self.process(screenshot: image)
+            }else{
+                print("**ERROR Screenshot is not received. Retrying...")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                    self?.requestScreenshot()
+                }
+            }
+        })
+    }
+    
+    fileprivate func process(screenshot: NSImage) {
         let context = screenshot.getCgContext()
         if let pixels = context?.data?.assumingMemoryBound(to: UInt8.self){
             let point = detectObstacle(pixels: pixels, size: screenshot.size)
             let score = detectScore(pixels: pixels, size: screenshot.size)
-            let x = point.x / screenshot.size.width
-            let y = point.y / screenshot.size.height
-            if score == 0 { //Game has ended:
-                //TODO:
-//                neuralNetwork.updateInputs([x, y])
-//                neuralNetwork.forwardProp()
+            let x = Float(point.x) / Float(screenshot.size.width)
+            let y = Float(point.y) / Float(screenshot.size.height)
+            
+            let player = currentPlayer!                     /* Should never fail */
+            if player.state == .playing && score == 0 {
+                /* Game has ended */
+                playerIndex += 1
+            }
+            
+            if let player = currentPlayer{
+                player.state = .playing
+                player.score = score
+                let result: [Float] = try! player.neuralNet.infer([x, y])
+                delegate?.sendFlickToDevice(x: result[0], y: result[1], x2: result[2], y2: result[3], duration: result[4])
             }else{
-                //Perform Forward propagation
-                //Send flick
+                /* No more players left in this generation */
+                delegate.allPlayersFinished()
+            }
+
+        }else{
+            print("**ERROR Could not process the screenshot. Retrying...")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                self?.requestScreenshot()
             }
         }
     }
@@ -73,6 +117,9 @@ class FootballBlackMini: Game {
     ///                            |
     ///---------------------------------------------------
     fileprivate func detectObstacle(pixels: UnsafeMutablePointer<UInt8>, size: NSSize) -> CGPoint{
+        let black = NSColor(calibratedRed: 0, green: 0, blue: 0, alpha: 1)
+        let white = NSColor(calibratedRed: 1, green: 1, blue: 1, alpha: 1)
+          
         var result = CGPoint.zero
         guard size.width > 0 else{
             return result

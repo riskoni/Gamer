@@ -19,6 +19,7 @@
 		971C5C5A23E2088A001B5F65 /* Dataset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971C5C5123E2088A001B5F65 /* Dataset.swift */; };
 		971C5C5B23E2088A001B5F65 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971C5C5223E2088A001B5F65 /* Cache.swift */; };
 		971C5C5C23E2088A001B5F65 /* NeuralNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971C5C5323E2088A001B5F65 /* NeuralNet.swift */; };
+		9728359D23E389CB0025ADDD /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9728359C23E389CB0025ADDD /* Player.swift */; };
 		9732BE7023E0BC5A00FFCEC8 /* AdbManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9732BE6F23E0BC5A00FFCEC8 /* AdbManager.swift */; };
 		9779E0AB23DF7AD700B60FEC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9779E0AA23DF7AD700B60FEC /* AppDelegate.swift */; };
 		9779E0AD23DF7AD700B60FEC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9779E0AC23DF7AD700B60FEC /* ViewController.swift */; };
@@ -40,6 +41,7 @@
 		971C5C5123E2088A001B5F65 /* Dataset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dataset.swift; sourceTree = "<group>"; };
 		971C5C5223E2088A001B5F65 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		971C5C5323E2088A001B5F65 /* NeuralNet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeuralNet.swift; sourceTree = "<group>"; };
+		9728359C23E389CB0025ADDD /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		9732BE6F23E0BC5A00FFCEC8 /* AdbManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdbManager.swift; sourceTree = "<group>"; };
 		9779E0A723DF7AD700B60FEC /* Gamer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gamer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9779E0AA23DF7AD700B60FEC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				971BCB8423E0CC2A00F809DD /* FootballBlackMini.swift */,
+				9728359C23E389CB0025ADDD /* Player.swift */,
 			);
 			path = GameHandlers;
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 				971C5C5623E2088A001B5F65 /* Error.swift in Sources */,
 				971C5C5C23E2088A001B5F65 /* NeuralNet.swift in Sources */,
 				971C5C5723E2088A001B5F65 /* Activation.swift in Sources */,
+				9728359D23E389CB0025ADDD /* Player.swift in Sources */,
 				971C5C5823E2088A001B5F65 /* Structure.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
