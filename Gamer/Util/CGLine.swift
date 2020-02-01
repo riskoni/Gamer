@@ -23,7 +23,8 @@ struct CGLine{
         
         for i in 1..<Int(distance){
             /* Linear interpolation */
-            let point = CGPoint(x: p1.x + dx*CGFloat(i)/distance, y: p1.y + dy*CGFloat(i)/distance)
+            let point = CGPoint(x: p1.x + dx*CGFloat(i)/distance,
+                                y: p1.y + dy*CGFloat(i)/distance)
             let byteNum = bytesPerRow * Int(point.y) + 4 * Int(point.x)
             let r = (CGFloat(pixels[byteNum])) / 255.0
             let g = (CGFloat(pixels[byteNum + 1])) / 255.0

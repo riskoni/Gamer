@@ -56,6 +56,29 @@ extension NSColor{
         let db = abs(self.blueComponent  - other.blueComponent)
         return (dr < percentage) && (dg < percentage) && (db < percentage)
     }
+
+}
+
+extension NeuralNet {
     
+    func dna() -> [Float] {
+        let dna = allWeights().reduce([]) { (result: [Float], layerWeights) -> [Float] in
+            return result + layerWeights
+        }
+        return dna
+    }
     
+    func setDna(_ dna: [Float]){
+        var weights = [[Float]]()
+        weights.append([])  //First entry should be empty
+        
+        var offset = 0
+        for i in 1..<layerNodeCounts.count {
+            let numElements = layerNodeCounts[i-1]*layerNodeCounts[i]
+            let subset = dna[offset..<offset+numElements]
+            weights.append(Array(subset))
+            offset+=numElements
+        }
+        try! setWeights(weights)
+    }
 }

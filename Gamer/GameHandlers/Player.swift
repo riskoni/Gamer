@@ -22,6 +22,4 @@ class Player{
         self.neuralNet = neuralNet
     }
     
-    
-    
 }
